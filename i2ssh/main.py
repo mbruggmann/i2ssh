@@ -4,6 +4,7 @@ import os
 import logging
 import sys
 import yaml
+from config import Config
 from layout import Layout
 from applescript import AppleScript
 
@@ -25,27 +26,14 @@ def main():
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
 
-    config_path = os.path.expanduser(args.config)
-    if not os.path.exists(config_path):
-        logging.error('No config file at %s', config_path)
-        sys.exit(0)
+    config = Config(path=args.config).cluster(args.cluster)
+    logging.debug('Cluster config: %s', config)
 
-    logging.debug('Load %s from %s' % (args.cluster, config_path))
-    with open(config_path, 'r') as ymlfile:
-        cfg = yaml.load(ymlfile)
+    layout = Layout(config)
+    logging.debug('Layout: %s', layout)
 
-        if not args.cluster in cfg:
-            logging.error('%s is not a cluster in %s', args.cluster, config_path)
-            sys.exit(0)
-
-        cluster_config = cfg[args.cluster]
-        logging.debug('Cluster config: %s', cluster_config)
-
-        layout = Layout(cluster_config)
-        logging.debug('Layout: %s', layout)
-
-        applescript = AppleScript(cluster_config, layout)
-        applescript.launch()
+    applescript = AppleScript(config, layout)
+    applescript.launch()
 
 
 if __name__ == '__main__':
