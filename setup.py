@@ -10,7 +10,7 @@ def read(*paths):
 setup(name='i2ssh',
       version='0.1.0',
       description='SSH into to a cluster of machines using iTerm 2 split panes on OSX.',
-      long_description=read('README.md'),
+      long_description=read('README.rst'),
       author='Marc Bruggmann',
       author_email='bruggmann.marc@gmail.com',
       url='https://github.com/mbruggmann/i2ssh',
