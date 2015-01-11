@@ -8,7 +8,7 @@ from applescript import launch
 
 DEFAULT_CONFIG = '~/.i2sshrc'
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
             'cluster',
@@ -41,3 +41,6 @@ if __name__ == '__main__':
         logging.debug('Cluster config: %s', cluster_config)
 
         launch(cluster_config)
+
+if __name__ == '__main__':
+    main()
