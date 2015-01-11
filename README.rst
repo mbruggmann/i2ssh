@@ -1,9 +1,17 @@
-I2SSH
+i2ssh
 =====
 
-SSH into to a cluster of machines using `iTerm 2 <http://www.iterm2.com>`_ split panes on OSX.
+ssh into to a cluster of machines using `iTerm 2 <http://www.iterm2.com>`_ split panes on OSX.
 
 |buildstatus|_
+
+Installation
+************
+
+::
+
+    $ pip install i2ssh
+
 
 Usage
 *****
