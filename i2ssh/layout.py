@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import math
+from math import ceil, sqrt
 
 class Layout:
     '''Describes an iTerm2 split layout.'''
@@ -21,8 +21,8 @@ class Layout:
 
     def _default_layout(self, nr_panes):
         '''Compute the default layout, based on the number of panes'''
-        cols = max(int(math.ceil(math.sqrt(nr_panes))), 1)
-        rows = max(int(math.floor(math.sqrt(nr_panes))), 1)
+        cols = max(int(ceil(sqrt(nr_panes))), 1)
+        rows = max(int(ceil(float(nr_panes)/cols)), 1)
         return (cols, rows)
 
     def __str__(self):

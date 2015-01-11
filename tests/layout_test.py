@@ -9,14 +9,28 @@ class LayoutTest(unittest.TestCase):
         self.assertEqual(2, l.cols)
         self.assertEqual(3, l.rows)
 
-    def test_nrhosts(self):
+    def test_nrhosts_zero(self):
         self.assertEqual((1, 1), self._for_nr_hosts(0))
+
+    def test_nrhosts_one(self):
         self.assertEqual((1, 1), self._for_nr_hosts(1))
-        self.assertEqual((2, 1), self._for_nr_hosts(2))
-        self.assertEqual((2, 1), self._for_nr_hosts(3))
+
+    def test_nrhosts_exact_squares(self):
         self.assertEqual((2, 2), self._for_nr_hosts(4))
-        self.assertEqual((3, 2), self._for_nr_hosts(5))
+        self.assertEqual((3, 3), self._for_nr_hosts(9))
         self.assertEqual((4, 4), self._for_nr_hosts(16))
+
+    def test_nrhosts_exact_nonsquares(self):
+        self.assertEqual((2, 1), self._for_nr_hosts(2))
+        self.assertEqual((3, 2), self._for_nr_hosts(6))
+        self.assertEqual((4, 3), self._for_nr_hosts(12))
+
+    def test_nrhosts_with_remainders(self):
+        self.assertEqual((2, 2), self._for_nr_hosts(3))
+        self.assertEqual((3, 2), self._for_nr_hosts(5))
+        self.assertEqual((3, 3), self._for_nr_hosts(7))
+        self.assertEqual((4, 3), self._for_nr_hosts(10))
+        self.assertEqual((4, 4), self._for_nr_hosts(13))
         self.assertEqual((5, 4), self._for_nr_hosts(17))
 
 
