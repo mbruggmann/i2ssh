@@ -12,7 +12,6 @@ Usage
 
     $ cat ~/.i2sshrc
     ---
-    version: 1
     mycluster:
       hosts:
         - host1.domain.net
@@ -47,10 +46,23 @@ Config file
 ::
 
     ---
-    version: 1
+    # the name of the cluster.
     mycluster:
-      cmd: 'ssh'        # the command to execute in every pane, defaults to 'ssh'
-      layout: '2x2'     # how to split the window, defaults '(n+1/2) x (n/2)'
+
+      # the command to execute in every pane, defaults to 'ssh'.
+      # the hostname for that pane will be appended to the
+      # command before being executed, resulting in something
+      # like 'ssh host1.domain.net'.
+      cmd: 'ssh'
+
+      # how to split the window, defaults to 'sqrt(n) x n/cols'.
+      layout: '2x2'
+
+      # the time to wait between scripting commands, in seconds.
+      # defaults to 0.1
+      delay: 0.1
+
+      # the list of hosts to execute the command for.
       hosts:
         - host1.domain.net
         - host2.domain.net
