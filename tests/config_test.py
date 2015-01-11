@@ -16,5 +16,5 @@ class ConfigTest(unittest.TestCase):
         tmpdir.write(FILENAME, yaml.dump(full_config, default_flow_style=False).encode('utf-8'))
         config = Config(os.path.join(tmpdir.path, FILENAME))
 
-        self.assertEquals(cluster_config, config.cluster('mycluster'))
+        self.assertEqual(cluster_config, config.cluster('mycluster'))
 
