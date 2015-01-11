@@ -20,3 +20,13 @@ class AppleScriptTest(unittest.TestCase):
         self.assertEqual({'name': 'host3', 'cmd': 'ssh host3'}, panes[2])
         self.assertEqual({'name': 'Disabled', 'cmd': script._DISABLED_CMD}, panes[3])
 
+    def test_delay(self):
+        delay = 0.1
+        config = {'hosts': [''], 'layout': '1x1', 'delay': delay}
+        script = AppleScript(config, Layout(config))
+        self.assertEqual(delay, script._namespace['delay'])
+
+    def test_default_delay(self):
+        config = {'hosts': [''], 'layout': '1x1'}
+        script = AppleScript(config, Layout(config))
+        self.assertEqual(script._DEFAULT_DELAY, script._namespace['delay'])

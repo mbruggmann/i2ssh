@@ -15,7 +15,7 @@ class AppleScript:
     '''Generates and launches a temporary AppleScript to configure iTerm2.'''
 
     _DEFAULT_CMD = 'ssh'
-    _DELAY = 0.2
+    _DEFAULT_DELAY = 0.1
     _DISABLED_CMD = 'stty -isig -icanon -echo && echo UNUSED && cat > /dev/null'
     _TEMPLATE = '''
         tell application "iTerm"
@@ -52,12 +52,13 @@ class AppleScript:
     def __init__(self, config, layout):
         hosts = config['hosts']
         cmd = config.get('cmd', self._DEFAULT_CMD)
+        delay = config.get('delay', self._DEFAULT_DELAY)
 
         namespace = {}
         namespace['panes'] = self._panes(layout, cmd, hosts)
         namespace['layout_name'] = layout
         namespace['layout_cmds'] = self._layout_cmds(layout)
-        namespace['delay'] = self._DELAY
+        namespace['delay'] = delay
         self._namespace = namespace
 
     def _panes(self, layout, cmd, hosts):
