@@ -14,8 +14,9 @@ class AppleScriptTest(unittest.TestCase):
         config = {'hosts': ['host1', 'host2', 'host3']}
         script = AppleScript(config, Layout(config))
         panes = script._namespace['panes']
-        self.assertEqual(3, len(panes))
+        self.assertEqual(4, len(panes))
         self.assertEqual({'name': 'host1', 'cmd': 'ssh host1'}, panes[0])
         self.assertEqual({'name': 'host2', 'cmd': 'ssh host2'}, panes[1])
         self.assertEqual({'name': 'host3', 'cmd': 'ssh host3'}, panes[2])
+        self.assertEqual({'name': 'Disabled', 'cmd': script._DISABLED_CMD}, panes[3])
 

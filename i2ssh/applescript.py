@@ -15,6 +15,7 @@ class AppleScript:
     '''Generates and launches a temporary AppleScript to configure iTerm2.'''
 
     _DEFAULT_CMD = 'ssh'
+    _DISABLED_CMD = 'stty -isig -icanon -echo && echo UNUSED && cat > /dev/null'
     _TEMPLATE = '''
         tell application "iTerm"
             -- panes
@@ -32,9 +33,11 @@ class AppleScript:
             set myterm to (make new terminal)
             tell myterm
                 launch session 1
+                -- set up layout
                 repeat with currentLayout in items of layout
                     tell i term application "System Events" to keystroke currentLayout using command down
                 end repeat
+                -- execute commands in active tabs
                 repeat with currentPane in items of panes
                     delay 1
                     tell the current session
@@ -52,13 +55,15 @@ class AppleScript:
         cmd = config.get('cmd', self._DEFAULT_CMD)
 
         namespace = {}
-        namespace['panes'] = self._panes(cmd, hosts)
+        namespace['panes'] = self._panes(layout, cmd, hosts)
         namespace['layout_name'] = layout
         namespace['layout_cmds'] = self._layout_cmds(layout)
         self._namespace = namespace
 
-    def _panes(self, cmd, hosts):
-        return [{'cmd': '%s %s'%(cmd, hostname), 'name': hostname} for hostname in hosts]
+    def _panes(self, layout, cmd, hosts):
+        enabled = [{'cmd': '%s %s'%(cmd, hostname), 'name': hostname} for hostname in hosts]
+        disabled = layout.disabled * [{'cmd': self._DISABLED_CMD, 'name': 'Disabled'}]
+        return enabled + disabled
 
     def _layout_cmds(self, layout):
         cols = layout.cols
