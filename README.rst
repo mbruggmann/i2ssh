@@ -22,6 +22,25 @@ Usage
 
     $ i2ssh mycluster
 
+
+Command-line arguments
+**********************
+
+::
+
+    $ i2ssh -h
+    usage: i2ssh [-h] [-c CONFIG] [-v] cluster
+
+    positional arguments:
+      cluster               the cluster to connect to.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -c CONFIG, --config CONFIG
+                            the config file to use (default "~/.i2sshrc").
+      -v, --verbose         increases log verbosity.
+
+
 Config file
 ***********
 
