@@ -5,7 +5,7 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
-install: "pip install -r requirements.txt"
-script: "python setup.py test"
+install: pip install -r requirements-dev.txt
+script: python setup.py test
 notifications:
   email: false
