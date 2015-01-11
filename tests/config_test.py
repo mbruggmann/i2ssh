@@ -13,7 +13,7 @@ class ConfigTest(unittest.TestCase):
         cluster_config = {'hosts': ['host1']}
         full_config = {'mycluster': cluster_config}
 
-        tmpdir.write(FILENAME, yaml.dump(full_config, default_flow_style=False))
+        tmpdir.write(FILENAME, yaml.dump(full_config, default_flow_style=False).encode('utf-8'))
         config = Config(os.path.join(tmpdir.path, FILENAME))
 
         self.assertEquals(cluster_config, config.cluster('mycluster'))
