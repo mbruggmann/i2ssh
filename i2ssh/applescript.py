@@ -40,13 +40,14 @@ tell application "iTerm"
 end tell
 '''
 
+DEFAULT_CMD = 'ssh'
+
 def pane_snippet(cmd=None, name="Default"):
     return pane_template % (cmd, name)
 
-def layout_snippet(count, spec=None):
-    cols = int(spec.split('x')[0] if spec else (count+1)/2)
-    rows = int(spec.split('x')[1] if spec else count/2)
-    realspec = '%sx%s' % (cols, rows)
+def layout_snippet(layout):
+    cols = layout.cols
+    rows = layout.rows
 
     splits = []
     for i in range(0, cols):
@@ -57,12 +58,15 @@ def layout_snippet(count, spec=None):
             splits.append('D')
         splits.append(']')
 
-    return layout_template % (realspec, '","'.join(splits))
+    return layout_template % (layout, '","'.join(splits))
 
-def launch(config):
+def launch(layout, config):
+    hosts = config['hosts']
+    cmd = config.get('cmd', DEFAULT_CMD)
+
     # Construct the applescript
-    panes = [pane_snippet('ls', hostname) for hostname in config['hosts']]
-    layout = layout_snippet(len(config['hosts']), config['layout'])
+    panes = [pane_snippet(cmd, hostname) for hostname in hosts]
+    layout = layout_snippet(layout)
     body = code_template % ('\n'.join(panes), layout)
 
     # Write it to a temporary file

@@ -4,6 +4,7 @@ import os
 import logging
 import sys
 import yaml
+from layout import Layout
 from applescript import launch
 
 DEFAULT_CONFIG = '~/.i2sshrc'
@@ -40,7 +41,10 @@ def main():
         cluster_config = cfg[args.cluster]
         logging.debug('Cluster config: %s', cluster_config)
 
-        launch(cluster_config)
+        layout = Layout(cluster_config)
+        logging.debug('Layout: %s', layout)
+
+        launch(layout, cluster_config)
 
 if __name__ == '__main__':
     main()
