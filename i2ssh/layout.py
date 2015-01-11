@@ -5,11 +5,12 @@ class Layout:
     '''Describes an iTerm2 split layout.'''
 
     def __init__(self, config):
+        nr_hosts = len(config['hosts'])
         if 'layout' in config:
             self._cols, self._rows = map(int, config['layout'].split('x'))
         else:
-            nr_panes = len(config['hosts'])
-            self._cols, self._rows = self._default_layout(nr_panes)
+            self._cols, self._rows = self._default_layout(nr_hosts)
+        self._disabled = self.cols*self.rows - nr_hosts
 
     @property
     def cols(self):
@@ -18,6 +19,10 @@ class Layout:
     @property
     def rows(self):
         return self._rows
+
+    @property
+    def disabled(self):
+        return self._disabled
 
     def _default_layout(self, nr_panes):
         '''Compute the default layout, based on the number of panes'''
