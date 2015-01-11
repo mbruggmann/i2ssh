@@ -16,7 +16,7 @@ setup(name='i2ssh',
       url='https://github.com/mbruggmann/i2ssh',
       license='Apache License 2.0',
       packages=find_packages(),
-      install_requires=['pyyaml'],
+      install_requires=['pyyaml', 'quik'],
       entry_points={
         'console_scripts': [
           'i2ssh = i2ssh.main:main',

@@ -4,77 +4,85 @@ import logging
 import sys
 import subprocess
 import tempfile
+from quik import Template
 
 # iTerm2 AppleScript adapted from
 # https://github.com/luismartingil/per.scripts/blob/master/iterm_launcher02.applescript
 # Author: Luis Martin Gil
 # Website: http://www.luismartingil.com/
 
-pane_template = '    set panes to panes & {{cmd:"%s", name:"%s"}}'
+class AppleScript:
+    '''Generates and launches a temporary AppleScript to configure iTerm2.'''
 
-layout_template = '''
-        -- layout %s
-        set layout to {"%s"}
-        repeat with currentLayout in items of layout
-            tell i term application "System Events" to keystroke currentLayout using command down
-        end repeat
-'''
+    _DEFAULT_CMD = 'ssh'
+    _TEMPLATE = '''
+        tell application "iTerm"
+            -- panes
+            set panes to {}
+            #for @pane in @panes:
+            set panes to panes & {{cmd:"@pane.cmd", name:"@pane.name"}}
+            #end
 
-code_template = '''
-tell application "iTerm"
-    set panes to {}
-%s
-    set myterm to (make new terminal)
-    tell myterm
-        launch session 1
-        %s
-        repeat with currentPane in items of panes
-            delay 1
-            tell the current session
-                set name to name of currentPane
-                write text cmd of currentPane
-                tell i term application "System Events" to keystroke "]" using command down
+            -- layout @layout_name
+            set layout to {}
+            #for @layout_cmd in @layout_cmds:
+            set layout to layout & {"@layout_cmd"}
+            #end
+
+            set myterm to (make new terminal)
+            tell myterm
+                launch session 1
+                repeat with currentLayout in items of layout
+                    tell i term application "System Events" to keystroke currentLayout using command down
+                end repeat
+                repeat with currentPane in items of panes
+                    delay 1
+                    tell the current session
+                        set name to name of currentPane
+                        write text cmd of currentPane
+                        tell i term application "System Events" to keystroke "]" using command down
+                    end tell
+                end repeat
             end tell
-        end repeat
-    end tell
-end tell
-'''
+        end tell
+    '''
 
-DEFAULT_CMD = 'ssh'
+    def __init__(self, config, layout):
+        hosts = config['hosts']
+        cmd = config.get('cmd', self._DEFAULT_CMD)
 
-def pane_snippet(cmd=None, name="Default"):
-    return pane_template % (cmd, name)
+        namespace = {}
+        namespace['panes'] = self._panes(cmd, hosts)
+        namespace['layout_name'] = layout
+        namespace['layout_cmds'] = self._layout_cmds(layout)
+        self._namespace = namespace
 
-def layout_snippet(layout):
-    cols = layout.cols
-    rows = layout.rows
+    def _panes(self, cmd, hosts):
+        return [{'cmd': '%s %s'%(cmd, hostname), 'name': hostname} for hostname in hosts]
 
-    splits = []
-    for i in range(0, cols):
-        if i < cols-1:
-            splits.append('d')
-            splits.append('[')
-        for j in range(0, rows-1):
-            splits.append('D')
-        splits.append(']')
+    def _layout_cmds(self, layout):
+        cols = layout.cols
+        rows = layout.rows
 
-    return layout_template % (layout, '","'.join(splits))
+        splits = []
+        for i in range(0, cols):
+            if i < cols-1:
+                splits.append('d')
+                splits.append('[')
+            for j in range(0, rows-1):
+                splits.append('D')
+            splits.append(']')
+        return splits
 
-def launch(layout, config):
-    hosts = config['hosts']
-    cmd = config.get('cmd', DEFAULT_CMD)
+    def launch(self):
+        template = Template(self._TEMPLATE)
+        self.script = template.render(self._namespace)
 
-    # Construct the applescript
-    panes = [pane_snippet(cmd, hostname) for hostname in hosts]
-    layout = layout_snippet(layout)
-    body = code_template % ('\n'.join(panes), layout)
+        temp = tempfile.NamedTemporaryFile(delete=False)
+        temp.write(self.script)
+        temp.close()
 
-    # Write it to a temporary file
-    temp = tempfile.NamedTemporaryFile(delete=False)
-    temp.write(body)
-    temp.close()
-    logging.debug('Applescript at %s: %s', temp.name, body)
-
-    subprocess.call('osascript %s' % temp.name, shell=True)
-    os.unlink(temp.name)
+        logging.debug('Launch AppleScript at %s: %s', temp.name, self.script)
+        subprocess.call('osascript %s' % temp.name, shell=True)
+        os.unlink(temp.name)
 
