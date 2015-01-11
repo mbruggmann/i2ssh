@@ -15,8 +15,13 @@ setup(name='i2ssh',
       author_email='bruggmann.marc@gmail.com',
       url='https://github.com/mbruggmann/i2ssh',
       license='Apache License 2.0',
-      scripts=['bin/i2ssh'],
       packages=find_packages(),
+      install_requires=['pyyaml'],
+      entry_points={
+        'console_scripts': [
+          'i2ssh = i2ssh.main:main',
+        ],
+      },
       classifiers=[
         'Topic :: Utilities',
         'Programming Language :: Python',
