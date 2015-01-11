@@ -17,6 +17,8 @@ setup(name='i2ssh',
       license='Apache License 2.0',
       packages=find_packages(),
       install_requires=['pyyaml', 'quik'],
+      tests_require=['nose', 'testfixtures'],
+      test_suite="nose.collector",
       entry_points={
         'console_scripts': [
           'i2ssh = i2ssh.main:main',
