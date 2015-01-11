@@ -1,5 +1,5 @@
 import unittest
-from layout import Layout
+from i2ssh.layout import Layout
 
 class LayoutTest(unittest.TestCase):
 
