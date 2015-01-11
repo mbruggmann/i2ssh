@@ -15,20 +15,18 @@ class AppleScript:
     '''Generates and launches a temporary AppleScript to configure iTerm2.'''
 
     _DEFAULT_CMD = 'ssh'
+    _DELAY = 0.2
     _DISABLED_CMD = 'stty -isig -icanon -echo && echo UNUSED && cat > /dev/null'
     _TEMPLATE = '''
         tell application "iTerm"
             -- panes
             set panes to {}
             #for @pane in @panes:
-            set panes to panes & {{cmd:"@pane.cmd", name:"@pane.name"}}
+            set panes to panes & {{cmd:"unset HISTFILE && @pane.cmd", name:"@pane.name"}}
             #end
 
             -- layout @layout_name
-            set layout to {}
-            #for @layout_cmd in @layout_cmds:
-            set layout to layout & {"@layout_cmd"}
-            #end
+            set layout to {} #for @layout_cmd in @layout_cmds: &{"@layout_cmd"}#end
 
             set myterm to (make new terminal)
             tell myterm
@@ -36,10 +34,11 @@ class AppleScript:
                 -- set up layout
                 repeat with currentLayout in items of layout
                     tell i term application "System Events" to keystroke currentLayout using command down
+                    delay @delay
                 end repeat
                 -- execute commands in active tabs
                 repeat with currentPane in items of panes
-                    delay 1
+                    delay @delay
                     tell the current session
                         set name to name of currentPane
                         write text cmd of currentPane
@@ -58,6 +57,7 @@ class AppleScript:
         namespace['panes'] = self._panes(layout, cmd, hosts)
         namespace['layout_name'] = layout
         namespace['layout_cmds'] = self._layout_cmds(layout)
+        namespace['delay'] = self._DELAY
         self._namespace = namespace
 
     def _panes(self, layout, cmd, hosts):
