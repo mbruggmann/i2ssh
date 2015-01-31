@@ -63,8 +63,13 @@ Config file
       # like 'ssh host1.domain.net'.
       cmd: 'ssh'
 
-      # how to split the window, defaults to 'sqrt(n) x n/cols'.
+      # how to split the window, defaults to 'sqrt(n) x (n/cols)'.
       layout: '2x2'
+
+      # position and size for the new window, defaults to
+      # maximize within the available space on screen. the format
+      # is (x, y, width, height).
+      window: '0, 0, 1440, 900'
 
       # the time to wait between scripting commands, in seconds.
       # defaults to 0.1
