@@ -11,29 +11,43 @@ class Window:
     def __init__(self, config):
         if 'window' in config:
             x, y, w, h = map(int, config['window'].split(','))
-            self._origin = Point(x=x, y=y)
-            self._size = Size(width=w, height=h)
+            self._origin = Point(x, y)
+            self._size = Size(w, h)
         else:
             self._origin, self._size = self._default_window()
 
     @property
     def origin(self):
+        '''The origin of the window, measure from the top left corner.'''
         return self._origin
 
     @property
     def size(self):
+        '''The size of the window.'''
         return self._size
 
     def _default_window(self):
         '''Maximize within the available frame by default'''
-        return self._available_frame()
+        frame = self._osx_frame()
+        visible = self._osx_available()
 
-    def _available_frame(self):
-        '''The available screen frame (screen resolution - menubar and dock)'''
-        frame = NSScreen.mainScreen().visibleFrame()
-        origin = Point(x=frame.origin.x, y=frame.origin.y)
-        size = Size(width=frame.size.width, height=frame.size.height)
-        return (origin, size)
+        width = int(visible.size.width)
+        height = int(visible.size.height)
+
+        # need to translate from x/y measured from lower left corner
+        # (as reported by OSX) to upper left corner
+        x = int(visible.origin.x)
+        y = int(frame.size.height - visible.size.height - visible.origin.y)
+
+        return (Point(x, y), Size(width, height))
+
+    def _osx_frame(self):
+        '''What OSX reports as the screen frame.'''
+        return NSScreen.mainScreen().frame()
+
+    def _osx_available(self):
+        '''What OSX reports as available frame for applications.'''
+        return NSScreen.mainScreen().visibleFrame()
 
     def __str__(self):
         return '%s,%s' % (self.origin, self.size)
