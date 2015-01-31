@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from collections import namedtuple
-from AppKit import NSScreen
 
 Point = namedtuple('Point', 'x, y')
 Size = namedtuple('Size', 'width, height')
@@ -43,10 +42,12 @@ class Window:
 
     def _osx_frame(self):
         '''What OSX reports as the screen frame.'''
+        from AppKit import NSScreen
         return NSScreen.mainScreen().frame()
 
     def _osx_available(self):
         '''What OSX reports as available frame for applications.'''
+        from AppKit import NSScreen
         return NSScreen.mainScreen().visibleFrame()
 
     def __str__(self):
