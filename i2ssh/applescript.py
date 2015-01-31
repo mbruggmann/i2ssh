@@ -29,8 +29,14 @@ class AppleScript:
             set layout to {} #for @layout_cmd in @layout_cmds: &{"@layout_cmd"}#end
 
             set myterm to (make new terminal)
+
             tell myterm
                 launch session 1
+            end tell
+
+            set the bounds of front window to {@window.x, @window.y, @window.tx, @window.ty}
+
+            tell myterm
                 -- set up layout
                 repeat with currentLayout in items of layout
                     tell i term application "System Events" to keystroke currentLayout using command down
@@ -49,7 +55,7 @@ class AppleScript:
         end tell
     '''
 
-    def __init__(self, config, layout):
+    def __init__(self, config, layout, window):
         hosts = config['hosts']
         cmd = config.get('cmd', self._DEFAULT_CMD)
         delay = config.get('delay', self._DEFAULT_DELAY)
@@ -59,6 +65,7 @@ class AppleScript:
         namespace['layout_name'] = layout
         namespace['layout_cmds'] = self._layout_cmds(layout)
         namespace['delay'] = delay
+        namespace['window'] = self._window(window)
         self._namespace = namespace
 
     def _panes(self, layout, cmd, hosts):
@@ -79,6 +86,11 @@ class AppleScript:
                 splits.append('D')
             splits.append(']')
         return splits
+
+    def _window(self, window):
+        return {'x': window.origin.x, 'y': window.origin.y,
+                'tx': window.origin.x + window.size.width,
+                'ty': window.origin.y + window.size.height}
 
     def launch(self):
         template = Template(self._TEMPLATE)

@@ -6,6 +6,7 @@ import sys
 import yaml
 from config import Config
 from layout import Layout
+from window import Window
 from applescript import AppleScript
 
 DEFAULT_CONFIG = '~/.i2sshrc'
@@ -32,7 +33,10 @@ def main():
     layout = Layout(config)
     logging.debug('Layout: %s', layout)
 
-    applescript = AppleScript(config, layout)
+    window = Window(config)
+    logging.debug('Window: %s', window)
+
+    applescript = AppleScript(config, layout, window)
     applescript.launch()
 
 
