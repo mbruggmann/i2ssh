@@ -8,7 +8,7 @@ def read(*paths):
         return f.read()
 
 setup(name='i2ssh',
-      version='0.2.0',
+      version='0.3.0',
       description='SSH into to a cluster of machines using iTerm 2 split panes on OSX.',
       long_description=read('README.rst'),
       author='Marc Bruggmann',
