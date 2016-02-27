@@ -20,5 +20,10 @@ class Config:
         if not name in self._cfg:
             logging.error('%s is not a cluster in %s', args.cluster, config_path)
             sys.exit(0)
+
         return self._cfg[name]
+
+    def clusternames(self):
+        """Return the names of the clusters in the config file"""
+        return self._cfg.keys()
 
