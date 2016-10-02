@@ -28,7 +28,7 @@ class AppleScript:
             -- layout @layout_name
             set layout to {} #for @layout_cmd in @layout_cmds: &{"@layout_cmd"}#end
 
-            set myterm to (make new terminal)
+            set myterm to (create window with default profile)
 
             tell myterm
                 launch session 1
@@ -39,7 +39,7 @@ class AppleScript:
             tell myterm
                 -- set up layout
                 repeat with currentLayout in items of layout
-                    tell i term application "System Events" to keystroke currentLayout using command down
+                    tell application "System Events" to keystroke currentLayout using command down
                     delay @delay
                 end repeat
                 -- execute commands in active tabs
@@ -48,7 +48,7 @@ class AppleScript:
                     tell the current session
                         set name to name of currentPane
                         write text cmd of currentPane
-                        tell i term application "System Events" to keystroke "]" using command down
+                        tell application "System Events" to keystroke "]" using command down
                     end tell
                 end repeat
             end tell
