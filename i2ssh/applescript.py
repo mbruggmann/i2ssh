@@ -57,6 +57,8 @@ class AppleScript:
 
     def __init__(self, config, layout, window):
         hosts = config['hosts']
+        if 'user' in config.keys():
+            hosts = map( lambda host: "{0}@{1}".format( config['user'], host ), hosts )
         cmd = config.get('cmd', self._DEFAULT_CMD)
         delay = config.get('delay', self._DEFAULT_DELAY)
 
