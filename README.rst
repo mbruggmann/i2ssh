@@ -3,7 +3,7 @@ i2ssh
 
 ssh into to a cluster of machines using `iTerm 2 <http://www.iterm2.com>`_ split panes on OSX.
 
-|buildstatus|_
+|pypi|_ |buildstatus|_
 
 Installation
 ************
@@ -46,6 +46,7 @@ Command-line arguments
       -c CONFIG, --config CONFIG
                             the config file to use (default "~/.i2sshrc").
       -v, --verbose         increases log verbosity.
+      -l, --list            list the clusters in the config file.
 
 
 Config file
@@ -62,6 +63,9 @@ Config file
       # command before being executed, resulting in something
       # like 'ssh host1.domain.net'.
       cmd: 'ssh'
+
+      # the remote user to log into as, defaults to the local user.
+      user: 'username'
 
       # how to split the window, defaults to 'sqrt(n) x (n/cols)'.
       layout: '2x2'
@@ -83,5 +87,7 @@ Config file
         - host4.domain.net
 
 
-.. |buildstatus| image:: https://api.travis-ci.org/mbruggmann/i2ssh.png?branch=master
+.. |buildstatus| image:: https://img.shields.io/travis/mbruggmann/i2ssh/master.svg
 .. _buildstatus: https://travis-ci.org/mbruggmann/i2ssh
+.. |pypi| image:: https://img.shields.io/pypi/v/i2ssh.svg
+.. _pypi: https://pypi.python.org/pypi/i2ssh
