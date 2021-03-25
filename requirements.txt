@@ -1,5 +1,5 @@
 --index-url https://pypi.python.org/simple/
 pyobjc-core==3.0.4
 pyobjc-framework-Cocoa==3.0.4
-PyYAML==3.11
+PyYAML==5.4
 quik==0.2.2
